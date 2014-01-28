@@ -22,10 +22,6 @@ class Server
               host = "#{handshake.headers['Host']}"
               host =~ /:(\d*)/
               port = $1
-              #t3 = Thread.fork {
-                  #puts "client starting to connect to connecting client-server #{port}"
-                  #@client.run(port)
-              #}
 
               ws.send "Hello Client, you connected to #{handshake.path}"
             }
@@ -49,7 +45,6 @@ end
 class Client
     def initialize()
         @isConnect  = false
-        #@connectionPool = Array.new()
     end
     def setConnect(isConnect)
         @isConnect = isConnect
@@ -59,26 +54,8 @@ class Client
     end
     def run(connectPort)
         puts "connect to #{connectPort}"
-        #if @connectionPool.include?(connectPort) then
-          #puts "already connect to #{connectPort}"
-          #return
-        #else 
           EM.run do
             conn = EventMachine::WebSocketClient.connect("ws://0.0.0.0:" + connectPort)
-
-            #conn.callback do
-              #puts "input your message"
-              #setConnect(true)
-              #@connectionPool.push connectPort #追加する。
-              #msg = STDIN.gets.chomp
-              #puts "your input msg: " + msg + " now sending..."
-              #conn.send_msg msg
-            #end
-
-
-            #conn.connected do
-            #end
-
             conn.errback do |e|
               puts "Got error: #{e}"
             end
@@ -93,7 +70,6 @@ class Client
             conn.disconnect do
               setConnect(false)
               puts "gone"
-              #EM::stop_event_loop
             end
 
             loop do
@@ -101,7 +77,6 @@ class Client
                 conn.send_msg STDIN.gets.chomp
             end
           end
-        #end
     end
 end
 
