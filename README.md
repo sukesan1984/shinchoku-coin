@@ -1,0 +1,4 @@
+shinchoku-coin
+==============
+
+shinchoku-coin
